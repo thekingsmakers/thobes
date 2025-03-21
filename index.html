@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thobe Collection | Premium Quality Traditional Wear</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet">
+    <script src="src/js/cart.js" defer></script>
+    <script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    primary: '#2C3E50',
+                    secondary: '#E67E22'
+                },
+                borderRadius: {
+                    'none': '0px',
+                    'sm': '4px',
+                    DEFAULT: '8px',
+                    'md': '12px',
+                    'lg': '16px',
+                    'xl': '20px',
+                    '2xl': '24px',
+                    '3xl': '32px',
+                    'full': '9999px',
+                    'button': '8px'
+                }
+            }
+        }
+    }
+    </script>
+    <style>
+    :where([class^="ri-"])::before { content: "\f3c2"; }
+    .product-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 2rem;
+    }
+    .custom-shadow {
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+    #cart-count {
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        background-color: #E67E22;
+        color: white;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .mobile-menu {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease-in-out;
+    }
+    .mobile-menu.active {
+        transform: translateX(0);
+    }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <header class="bg-white shadow-sm">
+        <nav class="container mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center space-x-12">
+                <button id="mobile-menu-button" class="md:hidden text-gray-600 hover:text-primary" aria-label="Toggle Menu">
+                    <i class="ri-menu-line text-2xl"></i>
+                </button>
+                <a href="index.html" class="flex items-center space-x-2">
+                    <img src="src/images/Logo/Sultan Thobes logo.png" alt="Sultan Thobes" class="h-12">
+                    <span class="text-2xl font-['Pacifico'] text-primary">Sultan Thobes</span>
+                </a>
+                <div class="hidden md:flex space-x-8">
+                    <a href="Traditional.html" class="text-gray-600 hover:text-primary">Traditional</a>
+                    <a href="Perfumes.html" class="text-gray-600 hover:text-primary">Perfumes</a>
+                    <a href="appointment.html" class="text-gray-600 hover:text-primary">Appointment</a>
+                </div>
+            </div>
+            <div class="flex items-center space-x-6">
+                <div class="relative hidden md:block">
+                    <input type="text" placeholder="Search products..." class="pl-10 pr-4 py-2 border border-gray-200 rounded-button focus:outline-none focus:border-primary text-sm">
+                    <i class="ri-search-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="w-10 h-10 flex items-center justify-center text-gray-600 hover:text-primary">
+                        <i class="ri-heart-line text-xl"></i>
+                    </button>
+                    <button class="w-10 h-10 flex items-center justify-center text-gray-600 hover:text-primary relative" onclick="cartManager.showCart()">
+                        <i class="ri-shopping-cart-line text-xl"></i>
+                        <span id="cart-count" class="hidden">0</span>
+                    </button>
+                </div>
+            </div>
+        </nav>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="mobile-menu fixed inset-0 bg-white z-50 md:hidden">
+            <div class="p-4">
+                <button id="close-menu" class="text-gray-600 hover:text-primary mb-6">
+                    <i class="ri-close-line text-2xl"></i>
+                </button>
+                <div class="space-y-4">
+                    <div class="mb-6">
+                        <input type="text" placeholder="Search products..." class="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-button focus:outline-none focus:border-primary text-sm">
+                        <i class="ri-search-line absolute left-7 top-[4.5rem] text-gray-400"></i>
+                    </div>
+                    <a href="Traditional.html" class="block py-2 text-gray-600 hover:text-primary text-lg">Traditional</a>
+                    <a href="Perfumes.html" class="block py-2 text-gray-600 hover:text-primary text-lg">Perfumes</a>
+                    <a href="appointment.html" class="block py-2 text-gray-600 hover:text-primary text-lg">Appointment</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <script>
+        // Mobile menu functionality
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const closeMenuButton = document.getElementById('close-menu');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+
+        closeMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+
+        // Close menu when clicking outside
+        mobileMenu.addEventListener('click', (e) => {
+            if (e.target === mobileMenu) {
+                mobileMenu.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+    </script>
+
+    <main>
+        <section class="relative h-[600px] overflow-hidden">
+            <div class="absolute inset-0">
+                <img src="https://public.readdy.ai/ai/img_res/043d2a1e69eaa4c64a82694271c77135.jpg" alt="Hero Background" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-r from-primary/90 to-transparent"></div>
+            </div>
+            <div class="container mx-auto px-4 h-full flex items-center">
+                <div class="max-w-2xl relative z-10">
+                    <h1 class="text-6xl font-bold mb-6 text-white leading-tight">Elevate Your Style with Premium Thobes</h1>
+                    <p class="text-xl mb-8 text-white/90">Experience unparalleled craftsmanship in our exclusive collection of handcrafted thobes, where tradition meets contemporary elegance.</p>
+                    <div class="flex gap-4">
+                        <a href="Traditional.html" class="bg-white text-primary px-8 py-3 rounded-button font-semibold hover:bg-gray-100 transition-all transform hover:scale-105 whitespace-nowrap inline-block">
+                            Explore Collection
+                        </a>
+                        <a href="appointment.html" class="border-2 border-white text-white px-8 py-3 rounded-button font-semibold hover:bg-white/10 transition-all transform hover:scale-105 whitespace-nowrap inline-block">
+                            Book Appointment
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="py-16 bg-white">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl font-bold text-center mb-12">Featured Collections</h2>
+                <div class="product-grid">
+                    <div class="bg-white rounded-lg overflow-hidden custom-shadow">
+                        <img src="https://public.readdy.ai/ai/img_res/bb93ac75a140dc18e0cd5fe847f6c92b.jpg" alt="Classic Thobe" class="w-full h-64 object-cover">
+                        <div class="p-4">
+                            <h3 class="text-lg font-semibold mb-2">Classic White Thobe</h3>
+                            <p class="text-gray-600 mb-4">Premium cotton blend</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-primary font-bold">$149.99</span>
+                                <button onclick="cartManager.addToCart({
+                                    name: 'Classic White Thobe',
+                                    description: 'Premium cotton blend',
+                                    price: 149.99,
+                                    image: 'https://public.readdy.ai/ai/img_res/bb93ac75a140dc18e0cd5fe847f6c92b.jpg'
+                                })" class="bg-primary text-white px-4 py-2 rounded-button hover:bg-opacity-90 transition cursor-pointer whitespace-nowrap">
+                                    Add to Cart
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg overflow-hidden custom-shadow">
+                        <img src="https://public.readdy.ai/ai/img_res/663d4afb1527e0661a49daebb7d6d673.jpg" alt="Modern Thobe" class="w-full h-64 object-cover">
+                        <div class="p-4">
+                            <h3 class="text-lg font-semibold mb-2">Modern Black Thobe</h3>
+                            <p class="text-gray-600 mb-4">Lightweight wool blend</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-primary font-bold">$179.99</span>
+                                <button onclick="cartManager.addToCart({
+                                    name: 'Modern Black Thobe',
+                                    description: 'Lightweight wool blend',
+                                    price: 179.99,
+                                    image: 'https://public.readdy.ai/ai/img_res/663d4afb1527e0661a49daebb7d6d673.jpg'
+                                })" class="bg-primary text-white px-4 py-2 rounded-button hover:bg-opacity-90 transition cursor-pointer whitespace-nowrap">
+                                    Add to Cart
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg overflow-hidden custom-shadow">
+                        <img src="https://public.readdy.ai/ai/img_res/4e7779e3d23ece030471e8732abbd47c.jpg" alt="Premium Thobe" class="w-full h-64 object-cover">
+                        <div class="p-4">
+                            <h3 class="text-lg font-semibold mb-2">Premium Beige Thobe</h3>
+                            <p class="text-gray-600 mb-4">Silk blend fabric</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-primary font-bold">$199.99</span>
+                                <button onclick="cartManager.addToCart({
+                                    name: 'Premium Beige Thobe',
+                                    description: 'Silk blend fabric',
+                                    price: 199.99,
+                                    image: 'https://public.readdy.ai/ai/img_res/4e7779e3d23ece030471e8732abbd47c.jpg'
+                                })" class="bg-primary text-white px-4 py-2 rounded-button hover:bg-opacity-90 transition cursor-pointer whitespace-nowrap">
+                                    Add to Cart
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg overflow-hidden custom-shadow">
+                        <img src="https://public.readdy.ai/ai/img_res/441c48de5e471a0e1f683606a5198b43.jpg" alt="Casual Thobe" class="w-full h-64 object-cover">
+                        <div class="p-4">
+                            <h3 class="text-lg font-semibold mb-2">Casual Navy Thobe</h3>
+                            <p class="text-gray-600 mb-4">Breathable cotton</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-primary font-bold">$129.99</span>
+                                <button onclick="cartManager.addToCart({
+                                    name: 'Casual Navy Thobe',
+                                    description: 'Breathable cotton',
+                                    price: 129.99,
+                                    image: 'https://public.readdy.ai/ai/img_res/441c48de5e471a0e1f683606a5198b43.jpg'
+                                })" class="bg-primary text-white px-4 py-2 rounded-button hover:bg-opacity-90 transition cursor-pointer whitespace-nowrap">
+                                    Add to Cart
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="py-16 bg-gray-50">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl font-bold text-center mb-12">Why Choose Us</h2>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="text-center">
+                        <div class="w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+                            <i class="ri-shield-check-line text-4xl text-primary"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-3">Premium Quality</h3>
+                        <p class="text-gray-600">Finest fabrics and expert craftsmanship for superior comfort and style</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+                            <i class="ri-truck-line text-4xl text-primary"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-3">Fast Delivery</h3>
+                        <p class="text-gray-600">Express worldwide shipping with careful packaging</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+                            <i class="ri-customer-service-2-line text-4xl text-primary"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-3">Customer Support</h3>
+                        <p class="text-gray-600">24/7 dedicated support for all your queries</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="py-16 bg-white">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl font-bold text-center mb-12">Custom Measurements</h2>
+                <div class="max-w-3xl mx-auto bg-gray-50 rounded-lg p-8">
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-gray-700 mb-2">Length</label>
+                            <input type="number" class="w-full px-4 py-2 border border-gray-200 rounded-button focus:outline-none focus:border-primary" placeholder="Enter length in cm">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 mb-2">Chest</label>
+                            <input type="number" class="w-full px-4 py-2 border border-gray-200 rounded-button focus:outline-none focus:border-primary" placeholder="Enter chest in cm">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 mb-2">Shoulder</label>
+                            <input type="number" class="w-full px-4 py-2 border border-gray-200 rounded-button focus:outline-none focus:border-primary" placeholder="Enter shoulder in cm">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 mb-2">Sleeve</label>
+                            <input type="number" class="w-full px-4 py-2 border border-gray-200 rounded-button focus:outline-none focus:border-primary" placeholder="Enter sleeve in cm">
+                        </div>
+                    </div>
+                    <button class="mt-6 w-full bg-primary text-white py-3 rounded-button hover:bg-opacity-90 transition cursor-pointer whitespace-nowrap">
+                        Save Measurements
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer class="bg-primary text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4">About Us</h3>
+                    <p class="text-gray-300">Premium quality traditional wear for the modern gentleman.</p>
+                    <div class="mt-4">
+                        <p class="text-gray-300"><i class="ri-map-pin-line"></i> Location: Nairobi, Kenya</p>
+                        <a href="https://wa.me/254769199053" target="_blank" class="text-gray-300 hover:text-white">
+                            <i class="ri-whatsapp-line"></i> WhatsApp: +254 769 199 053
+                        </a>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-300 hover:text-white">Shop</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white">Size Guide</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white">Custom Orders</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Customer Service</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-300 hover:text-white">Shipping Info</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white">Returns</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white">FAQ</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white">Track Order</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Newsletter</h3>
+                    <p class="text-gray-300 mb-4">Subscribe to get special offers and updates</p>
+                    <div class="flex">
+                        <input type="email" placeholder="Enter your email" class="flex-1 px-4 py-2 rounded-l-button focus:outline-none text-gray-900">
+                        <button class="bg-secondary px-4 py-2 rounded-r-button hover:bg-opacity-90 transition cursor-pointer whitespace-nowrap">
+                            Subscribe
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 flex justify-between items-center">
+                <p class="text-gray-300">&copy; 2025 Sultan Thobes. All rights reserved.</p>
+                <div class="flex space-x-4">
+                    <a href="#" class="text-gray-300 hover:text-white">
+                        <i class="ri-facebook-fill"></i>
+                    </a>
+                    <a href="#" class="text-gray-300 hover:text-white">
+                        <i class="ri-instagram-fill"></i>
+                    </a>
+                    <a href="#" class="text-gray-300 hover:text-white">
+                        <i class="ri-twitter-fill"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

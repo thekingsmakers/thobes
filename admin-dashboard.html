@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Sultan Thobes</title>
+    <!-- Using Tailwind CDN for now, but should be replaced with a proper build process -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet">
+    <!-- Include config files directly -->
+    <script src="src/images/traditional/config.js"></script>
+    <script src="src/images/perfumes/config.js"></script>
+    <script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    primary: '#2C3E50',
+                    secondary: '#E67E22'
+                },
+                borderRadius: {
+                    'none': '0px',
+                    'sm': '4px',
+                    DEFAULT: '8px',
+                    'md': '12px',
+                    'lg': '16px',
+                    'xl': '20px',
+                    '2xl': '24px',
+                    '3xl': '32px',
+                    'full': '9999px',
+                    'button': '8px'
+                }
+            }
+        }
+    }
+    </script>
+    <style>
+    .custom-shadow {
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div class="flex h-full">
+        <!-- Mobile Menu Button -->
+        <button id="mobile-menu-button" class="md:hidden fixed top-4 left-4 z-50 p-2 bg-primary text-white rounded-button">
+            <i class="ri-menu-line text-xl"></i>
+        </button>
+
+        <!-- Mobile Menu Backdrop -->
+        <div id="sidebar-backdrop" class="fixed inset-0 bg-black bg-opacity-50 hidden md:hidden z-30" onclick="toggleMobileMenu()"></div>
+
+        <!-- Sidebar -->
+        <div id="sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full md:translate-x-0 w-64 bg-primary text-white transition-transform duration-200 ease-in-out z-40 shadow-xl">
+            <div class="p-4">
+                <div class="flex items-center space-x-2 mb-8">
+                    <img src="src/images/Logo/Sultan Thobes logo.png" alt="Sultan Thobes" class="h-10">
+                    <span class="text-lg font-semibold">Admin Panel</span>
+                </div>
+                <nav class="space-y-2">
+                    <button data-section="existing" class="w-full text-left p-3 rounded-button hover:bg-white/10 transition">
+                        <i class="ri-stack-line mr-2"></i> Existing Products
+                    </button>
+                    <button data-section="traditional" class="w-full text-left p-3 rounded-button hover:bg-white/10 transition">
+                        <i class="ri-t-shirt-line mr-2"></i> Add Traditional
+                    </button>
+                    <button data-section="perfumes" class="w-full text-left p-3 rounded-button hover:bg-white/10 transition">
+                        <i class="ri-drop-line mr-2"></i> Add Perfumes
+                    </button>
+                    <button data-section="offers" class="w-full text-left p-3 rounded-button hover:bg-white/10 transition">
+                        <i class="ri-price-tag-3-line mr-2"></i> Special Offers
+                    </button>
+                    <a href="admin.html" class="w-full text-left p-3 rounded-button hover:bg-white/10 transition block">
+                        <i class="ri-logout-box-line mr-2"></i> Logout
+                    </a>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 md:ml-64 p-4 md:p-8">
+            <!-- Top Bar -->
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 gap-4">
+                <h1 class="text-2xl font-bold text-gray-800">Admin Dashboard</h1>
+                
+                <!-- Search Bar -->
+                <div id="search-container" class="w-full md:w-1/3 hidden">
+                    <div class="relative">
+                        <input type="text" id="search-input" placeholder="Search products..."
+                            class="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-button focus:outline-none focus:border-primary bg-white shadow-sm">
+                        <i class="ri-search-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Existing Products Section -->
+            <div id="existing-section" class="section">
+                <div class="mb-8">
+                    <h2 class="text-2xl font-bold mb-6">Current Products</h2>
+                    
+                    <!-- Traditional Products -->
+                    <div class="mb-12">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="text-xl font-semibold">Traditional Thobes</h3>
+                        </div>
+                        <div class="bg-white rounded-button p-6 shadow-sm">
+                            <div id="existing-traditional" class="space-y-4"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Perfumes -->
+                    <div class="mb-12">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="text-xl font-semibold">Perfumes</h3>
+                        </div>
+                        <div class="bg-white rounded-button p-6 shadow-sm">
+                            <div id="existing-perfumes" class="space-y-4"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Traditional Section -->
+            <div id="traditional-section" class="section hidden">
+                <div class="max-w-2xl mx-auto">
+                    <h2 class="text-2xl font-bold mb-6">Add New Traditional Thobe</h2>
+                    <div class="bg-white rounded-button p-6 shadow-sm">
+                        <form id="traditional-form" class="space-y-6">
+                            <div>
+                                <label class="block text-gray-700 mb-2">Category</label>
+                                <select name="category" required class="w-full px-4 py-2 border border-gray-200 rounded-button">
+                                    <option value="Qatari">Qatari</option>
+                                    <option value="Emarati">Emarati</option>
+                                    <option value="Omani">Omani</option>
+                                    <option value="Somali">Somali</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 mb-2">Image</label>
+                                <input type="file" name="image" accept="image/*" required
+                                    class="w-full px-4 py-2 border border-gray-200 rounded-button">
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 mb-2">Price ($)</label>
+                                <input type="number" name="price" required step="0.01" min="0"
+                                    class="w-full px-4 py-2 border border-gray-200 rounded-button">
+                            </div>
+                            <button type="submit" class="w-full bg-primary text-white py-2 rounded-button hover:bg-opacity-90">
+                                Add Traditional Thobe
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Perfumes Section -->
+            <div id="perfumes-section" class="section hidden">
+                <div class="max-w-2xl mx-auto">
+                    <h2 class="text-2xl font-bold mb-6">Add New Perfume</h2>
+                    <div class="bg-white rounded-button p-6 shadow-sm">
+                        <form id="perfume-form" class="space-y-6">
+                            <div>
+                                <label class="block text-gray-700 mb-2">Category</label>
+                                <select name="category" required class="w-full px-4 py-2 border border-gray-200 rounded-button">
+                                    <option value="arabian_oud">Arabian Oud</option>
+                                    <option value="french_perfumes">French Perfumes</option>
+                                    <option value="luxury_brands">Luxury Brands</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 mb-2">Image</label>
+                                <input type="file" name="image" accept="image/*" required
+                                    class="w-full px-4 py-2 border border-gray-200 rounded-button">
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 mb-2">Price ($)</label>
+                                <input type="number" name="price" required step="0.01" min="0"
+                                    class="w-full px-4 py-2 border border-gray-200 rounded-button">
+                            </div>
+                            <button type="submit" class="w-full bg-primary text-white py-2 rounded-button hover:bg-opacity-90">
+                                Add Perfume
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Special Offers Section -->
+            <div id="offers-section" class="section hidden">
+                <div class="max-w-2xl mx-auto">
+                    <h2 class="text-2xl font-bold mb-6">Add Special Offer</h2>
+                    <div class="bg-white rounded-button p-6 shadow-sm">
+                        <form id="offer-form" class="space-y-6">
+                            <div>
+                                <label class="block text-gray-700 mb-2">Title</label>
+                                <input type="text" name="title" required
+                                    class="w-full px-4 py-2 border border-gray-200 rounded-button">
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 mb-2">Description</label>
+                                <textarea name="description" required rows="3"
+                                    class="w-full px-4 py-2 border border-gray-200 rounded-button"></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 mb-2">Discount Percentage</label>
+                                <input type="number" name="discount" required min="1" max="99"
+                                    class="w-full px-4 py-2 border border-gray-200 rounded-button">
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 mb-2">Valid Until</label>
+                                <input type="date" name="validUntil" required
+                                    class="w-full px-4 py-2 border border-gray-200 rounded-button">
+                            </div>
+                            <button type="submit" class="w-full bg-primary text-white py-2 rounded-button hover:bg-opacity-90">
+                                Add Special Offer
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Current Offers -->
+                <div class="mt-12 max-w-2xl mx-auto">
+                    <h3 class="text-xl font-semibold mb-6">Current Offers</h3>
+                    <div id="offer-items" class="space-y-4">
+                        <!-- Offers will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Price Modal -->
+    <div id="edit-price-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+        <div class="bg-white rounded-button p-6 max-w-md w-full mx-4">
+            <h3 class="text-xl font-bold mb-4">Edit Price</h3>
+            <form id="edit-price-form" class="space-y-4">
+                <input type="hidden" id="edit-item-category">
+                <input type="hidden" id="edit-item-index">
+                <input type="hidden" id="edit-item-type">
+                <div>
+                    <label class="block text-gray-700 mb-2">Item Name</label>
+                    <input type="text" id="edit-item-name" readonly 
+                        class="w-full px-4 py-2 bg-gray-100 border border-gray-200 rounded-button">
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-2">Price ($)</label>
+                    <input type="number" id="edit-item-price" required step="0.01"
+                        class="w-full px-4 py-2 border border-gray-200 rounded-button focus:outline-none focus:border-primary">
+                </div>
+                <div class="flex justify-end space-x-4">
+                    <button type="button" onclick="closeModal('edit-price-modal')" 
+                        class="px-4 py-2 border border-gray-300 rounded-button hover:bg-gray-100">
+                        Cancel
+                    </button>
+                    <button type="submit" class="px-4 py-2 bg-primary text-white rounded-button hover:bg-opacity-90">
+                        Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="src/js/admin.js"></script>
+</body>
+</html>

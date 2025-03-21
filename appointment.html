@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Appointment | Thobe Collection</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet">
+    <script src="src/js/cart.js" defer></script>
+    <script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    primary: '#2C3E50',
+                    secondary: '#E67E22'
+                },
+                borderRadius: {
+                    'none': '0px',
+                    'sm': '4px',
+                    DEFAULT: '8px',
+                    'md': '12px',
+                    'lg': '16px',
+                    'xl': '20px',
+                    '2xl': '24px',
+                    '3xl': '32px',
+                    'full': '9999px',
+                    'button': '8px'
+                }
+            }
+        }
+    }
+    </script>
+    <style>
+    .custom-shadow {
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+    #cart-count {
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        background-color: #E67E22;
+        color: white;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .mobile-menu {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease-in-out;
+    }
+    .mobile-menu.active {
+        transform: translateX(0);
+    }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <header class="bg-white shadow-sm">
+        <nav class="container mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center space-x-12">
+                <button id="mobile-menu-button" class="md:hidden text-gray-600 hover:text-primary" aria-label="Toggle Menu">
+                    <i class="ri-menu-line text-2xl"></i>
+                </button>
+                <a href="index.html" class="flex items-center space-x-2">
+                    <img src="src/images/Logo/Sultan Thobes logo.png" alt="Sultan Thobes" class="h-12">
+                    <span class="text-2xl font-['Pacifico'] text-primary">Sultan Thobes</span>
+                </a>
+                <div class="hidden md:flex space-x-8">
+                    <a href="Traditional.html" class="text-gray-600 hover:text-primary">Traditional</a>
+                    <a href="Perfumes.html" class="text-gray-600 hover:text-primary">Perfumes</a>
+                    <a href="appointment.html" class="text-primary font-semibold">Appointment</a>
+                </div>
+            </div>
+            <div class="flex items-center space-x-6">
+                <div class="relative hidden md:block">
+                    <input type="text" placeholder="Search products..." class="pl-10 pr-4 py-2 border border-gray-200 rounded-button focus:outline-none focus:border-primary text-sm">
+                    <i class="ri-search-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="w-10 h-10 flex items-center justify-center text-gray-600 hover:text-primary">
+                        <i class="ri-heart-line text-xl"></i>
+                    </button>
+                    <button class="w-10 h-10 flex items-center justify-center text-gray-600 hover:text-primary relative" onclick="cartManager.showCart()">
+                        <i class="ri-shopping-cart-line text-xl"></i>
+                        <span id="cart-count" class="hidden">0</span>
+                    </button>
+                </div>
+            </div>
+        </nav>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="mobile-menu fixed inset-0 bg-white z-50 md:hidden">
+            <div class="p-4">
+                <button id="close-menu" class="text-gray-600 hover:text-primary mb-6">
+                    <i class="ri-close-line text-2xl"></i>
+                </button>
+                <div class="space-y-4">
+                    <div class="mb-6">
+                        <input type="text" placeholder="Search products..." class="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-button focus:outline-none focus:border-primary text-sm">
+                        <i class="ri-search-line absolute left-7 top-[4.5rem] text-gray-400"></i>
+                    </div>
+                    <a href="Traditional.html" class="block py-2 text-gray-600 hover:text-primary text-lg">Traditional</a>
+                    <a href="Perfumes.html" class="block py-2 text-gray-600 hover:text-primary text-lg">Perfumes</a>
+                    <a href="appointment.html" class="block py-2 text-primary font-semibold text-lg">Appointment</a>
+                </div>
+            </div>
+        </div>
+    </header>
+    <main class="py-16">
+        <div class="container mx-auto px-4">
+            <div class="max-w-2xl mx-auto">
+                <h1 class="text-4xl font-bold mb-8 text-center">Book an Appointment</h1>
+                <div class="bg-white rounded-button p-8 custom-shadow">
+                    <form id="appointmentForm" onsubmit="handleSubmit(event)" class="space-y-6">
+                        <div>
+                            <label class="block text-gray-700 mb-2">Full Name</label>
+                            <input type="text" id="name" required class="w-full px-4 py-2 border border-gray-200 rounded-button focus:outline-none focus:border-primary">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 mb-2">Phone Number</label>
+                            <input type="tel" id="phone" required class="w-full px-4 py-2 border border-gray-200 rounded-button focus:outline-none focus:border-primary">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 mb-2">Preferred Date</label>
+                            <input type="date" id="date" required class="w-full px-4 py-2 border border-gray-200 rounded-button focus:outline-none focus:border-primary">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 mb-2">Preferred Time</label>
+                            <select id="time" required class="w-full px-4 py-2 border border-gray-200 rounded-button focus:outline-none focus:border-primary">
+                                <option value="">Select a time</option>
+                                <option value="09:00">09:00 AM</option>
+                                <option value="10:00">10:00 AM</option>
+                                <option value="11:00">11:00 AM</option>
+                                <option value="12:00">12:00 PM</option>
+                                <option value="13:00">01:00 PM</option>
+                                <option value="14:00">02:00 PM</option>
+                                <option value="15:00">03:00 PM</option>
+                                <option value="16:00">04:00 PM</option>
+                                <option value="17:00">05:00 PM</option>
+                                <option value="18:00">06:00 PM</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 mb-2">Additional Notes</label>
+                            <textarea id="notes" rows="4" class="w-full px-4 py-2 border border-gray-200 rounded-button focus:outline-none focus:border-primary"></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-primary text-white py-3 rounded-button hover:bg-opacity-90 transition">
+                            Book Appointment
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer class="bg-primary text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-2 gap-8 mb-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Contact Information</h3>
+                    <div>
+                        <p class="text-gray-300"><i class="ri-map-pin-line"></i> Location: Nairobi, Kenya</p>
+                        <a href="https://wa.me/254769199053" target="_blank" class="text-gray-300 hover:text-white">
+                            <i class="ri-whatsapp-line"></i> WhatsApp: +254 769 199 053
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <p class="text-gray-300 text-center border-t border-gray-700 pt-8">&copy; 2025 Sultan Thobes. All rights reserved.</p>
+        </div>
+    </footer>
+    <script>
+    // Mobile menu functionality
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const closeMenuButton = document.getElementById('close-menu');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    mobileMenuButton.addEventListener('click', () => {
+        mobileMenu.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    });
+
+    closeMenuButton.addEventListener('click', () => {
+        mobileMenu.classList.remove('active');
+        document.body.style.overflow = '';
+    });
+
+    // Close menu when clicking outside
+    mobileMenu.addEventListener('click', (e) => {
+        if (e.target === mobileMenu) {
+            mobileMenu.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    });
+
+    function handleSubmit(event) {
+        event.preventDefault();
+        
+        const name = document.getElementById('name').value;
+        const phone = document.getElementById('phone').value;
+        const date = document.getElementById('date').value;
+        const time = document.getElementById('time').value;
+        const notes = document.getElementById('notes').value;
+
+        const message = `Hello! I would like to book an appointment:\n\nName: ${name}\nPhone: ${phone}\nDate: ${date}\nTime: ${time}\nNotes: ${notes}`;
+        
+        // WhatsApp phone number
+        const phoneNumber = '254769199053';
+        
+        // Create WhatsApp URL
+        const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+        
+        // Open WhatsApp in a new tab
+        window.open(whatsappUrl, '_blank');
+    }
+
+    // Set minimum date to today
+    const dateInput = document.getElementById('date');
+    const today = new Date().toISOString().split('T')[0];
+    dateInput.min = today;
+    </script>
+</body>
+</html>
