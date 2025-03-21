@@ -1,9 +1,13 @@
 <?php
-// Enable error reporting for debugging
+// Prevent any output before headers
+ob_start();
+
+// Enable error reporting for logging only
 error_reporting(E_ALL);
-ini_set('display_errors', 1);
+ini_set('display_errors', 0);
 
 // Log function
+=======
 function logDebug($message, $data = null) {
     $logFile = 'debug.log';
     $timestamp = date('Y-m-d H:i:s');
@@ -16,7 +20,14 @@ function logDebug($message, $data = null) {
 
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: POST');
+header('Access-Control-Allow-Methods: POST, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, Content-Length');
+
+// Handle preflight requests
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     logDebug('Received file upload request', $_FILES);
@@ -104,4 +115,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     http_response_code(405);
     echo json_encode(['success' => false, 'message' => 'Method not allowed']);
 }
-?>
+=======

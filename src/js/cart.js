@@ -2,6 +2,47 @@ class CartManager {
     constructor() {
         this.cart = JSON.parse(localStorage.getItem('cart')) || [];
         this.updateCartCount();
+        this.checkAndDisplayOffers();
+    }
+
+    // Load and check offers
+    checkAndDisplayOffers() {
+        const offers = JSON.parse(localStorage.getItem('specialOffers')) || [];
+        const now = new Date();
+        const activeOffers = offers.filter(offer => {
+            const validUntil = new Date(offer.validUntil);
+            return validUntil > now;
+        });
+
+        if (activeOffers.length > 0) {
+            this.displayOfferBanner(activeOffers[0]); // Show the first active offer
+        }
+    }
+
+    displayOfferBanner(offer) {
+        const banner = document.getElementById('offers-banner');
+        const offerText = document.getElementById('offer-text');
+        if (banner && offerText) {
+            offerText.textContent = `${offer.title}: ${offer.discount}% OFF - ${offer.description}`;
+            banner.classList.remove('hidden');
+            
+            // Auto hide on expiry
+            const validUntil = new Date(offer.validUntil);
+            const now = new Date();
+            const timeUntilExpiry = validUntil.getTime() - now.getTime();
+            if (timeUntilExpiry > 0) {
+                setTimeout(() => {
+                    this.closeOffer();
+                }, timeUntilExpiry);
+            }
+        }
+    }
+
+    closeOffer() {
+        const banner = document.getElementById('offers-banner');
+        if (banner) {
+            banner.classList.add('hidden');
+        }
     }
 
     addToCart(item) {
@@ -154,3 +195,8 @@ class CartManager {
 
 // Initialize cart manager
 const cartManager = new CartManager();
+
+// Make closeOffer globally available
+window.closeOffer = function() {
+    cartManager.closeOffer();
+};
